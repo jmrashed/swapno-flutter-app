@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'profile_screen.dart'; // Import Profile Screen
 import 'products_screen.dart'; // Import Products Screen
 import 'orders_screen.dart'; // Import Orders Screen
@@ -117,7 +118,7 @@ class _DashboardState extends State<Dashboard> {
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
@@ -157,20 +158,24 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16),
-          Expanded(
-            child: ListView(
-              children: [
-                _buildRecentOrders(),
-                _buildRecentProducts(),
-              ],
-            ),
+          ListView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              _buildRecentOrders(),
+              _buildRecentProducts(),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDashboardCard({required String title, required String value, required IconData icon, required Color color}) {
+  Widget _buildDashboardCard(
+      {required String title,
+      required String value,
+      required IconData icon,
+      required Color color}) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -178,21 +183,21 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Container(
         width: 150,
-        height: 150,
+        height: 170,
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 48, color: color),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               value,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 16),
             Text(
               title,
               style: TextStyle(
@@ -235,6 +240,18 @@ class HomeScreen extends StatelessWidget {
             SizedBox(height: 8),
             ...recentOrders.map((order) {
               return ListTile(
+
+              onTap: ()  {
+                Fluttertoast.showToast(
+                  msg: "Order ID: ${order['orderId']}",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.blue,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+                );
+              },
                 title: Text('Order #${order['orderId']}'),
                 subtitle: Text('Customer: ${order['customer']}'),
                 trailing: Text(order['amount']!),
@@ -265,16 +282,29 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Recent Products',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ...recentProducts.map((product) {
+
               return ListTile(
+              onTap: ()  {
+                Fluttertoast.showToast(
+                  msg: "Product ID: ${product['productId']}",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.blue,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+                );
+              }
+              ,
                 title: Text('Product ID: ${product['productId']}'),
                 subtitle: Text('Name: ${product['name']}'),
                 trailing: Text(product['price']!),
